@@ -1,0 +1,86 @@
+<html>
+
+<body>
+    <input data-bind="value: searchText, event: { keyup: keyHandler }" />
+    <button data-bind="click: search">search</button>
+    <h2>suggestions</h2>
+    <ul data-bind="foreach: suggestions">
+        <li>
+            <b data-bind="text: displayText"></b >
+            </li>
+        </ul>
+    <h2>results</h2>
+    <ul data-bind="foreach: results">
+        <li>
+            <b data-bind="text: displayText"></b >
+            </li>
+        </ul>
+    </body>
+</html>
+
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js"></script>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/redux/3.6.0/redux.min.js"></script>
+<script src="../../dist/AzSearchStore.bundle.js"></script>
+<script type="text/javascript">
+    var store = new AzSearchStore.AzSearchStore();
+    store.setConfig({ index: "realestate-us-sample", queryKey: "8EF3C0C4BD32C51BCCA4D74AABFA118E", service: "azs-playground" });
+    store.updateSearchParameters({ count: true });
+    store.setInput("*");
+    store.addCheckboxFacet("beds", "number");
+    store.addRangeFacet("sqft","number", 0, 20000);
+    store.addCheckboxFacet("baths","number");
+    // create a post processor to create the desired display text since knockout lacks ritch templating
+    var postProcessor = function(results) {
+        return results.map(function(result){
+            result.displayText = result.number + " " + result.street+ " " +result.city+ ", " +result.region+ " " +result.countryCode;
+            return result;
+        });
+    };
+    // set post processors to run after results are recieved
+    store.setResultsProcessor(postProcessor);
+    store.setSuggestionsProcessor(postProcessor);
+    // set suggester, project some additional fields into the returned suggestions
+    store.updateSuggestionsParameters({
+        suggesterName: "sg",
+        select: "number,street,city,region,countryCode"
+    });
+    function SearchViewModel() {
+        _that = this;
+        this.results = ko.observableArray([
+            {
+                displayText: "no results"
+            }
+        ]);
+        this.suggestions = ko.observableArray([
+            {
+                displayText: "no suggestions"
+            }
+        ]);
+
+        this.searchText = ko.observable("");
+        this.updateViewModel = function () {
+            var state = store.getState();
+            if(state.results.results && state.results.results.length){
+                _that.results(state.results.results);
+            }
+            if(state.suggestions.suggestions && state.suggestions.suggestions.length){
+                _that.suggestions(state.suggestions.suggestions);
+            }
+            
+        }
+        this.search = function () {
+            store.search()
+        }
+        this.keyHandler = function (data, event) {
+            if (event.key === "Enter") {
+                return store.search();
+            }
+            store.setInput(event.target.value);
+            store.suggest()
+        }
+    }
+    var viewModel = new SearchViewModel();
+    ko.applyBindings(viewModel);
+    store.subscribe(viewModel.updateViewModel)
+</script>
