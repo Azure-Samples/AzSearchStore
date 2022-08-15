@@ -1,5 +1,5 @@
 {
-  "name": "azsearchstore",
+  "name": "@microsoft/azsearchstore",
   "version": "0.0.28",
   "description": "redux based UI state management for applications consuming Azure Search",
   "repository": {
