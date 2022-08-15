@@ -3,7 +3,8 @@ export namespace Store {
     export type Config = {
         index: string,
         queryKey: string,
-        service: string
+        service: string,
+        dnsSuffix?: string,
         suggestCallback?: (state: Store.SearchState, postBody: { [key: string]: any }) => Promise<any>,
         searchCallback?: (state: Store.SearchState, postBody: { [key: string]: any }) => Promise<any>,
     };

@@ -1,6 +1,6 @@
 {
   "name": "azsearchstore",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "redux based UI state management for applications consuming Azure Search",
   "repository": {
     "type": "git",
@@ -24,13 +24,13 @@
   "author": "Evan Boyle (https://github.com/EvanBoyle)",
   "license": "MIT",
   "devDependencies": {
-    "@types/nock": "^8.2.0",
-    "@types/redux-mock-store": "0.0.7",
     "@types/jest": "^16.0.4",
+    "@types/nock": "^8.2.0",
     "@types/object-assign": "^4.0.30",
     "@types/react": "^15.0.0",
     "@types/react-dom": "^0.14.20",
     "@types/react-redux": "^4.4.36",
+    "@types/redux-mock-store": "0.0.7",
     "@types/urijs": "^1.15.31",
     "awesome-typescript-loader": "3.1.2",
     "http-server": "^0.10.0",
