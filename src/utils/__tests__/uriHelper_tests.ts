@@ -369,6 +369,14 @@ describe("utils/uriHelper", () => {
         ).toEqual("https://buzz.search.windows.net/indexes/foo/docs/suggest?api-version=2016-09-01");
         expect(searchURI.hasQuery("api-version", "2016-09-01")).toBe(true);
     });
+    it("should create a suggest uri from test config, and test suggestions parameters and dns suffix", () => {
+        const uriString = uriHelper.buildSuggestionsURI({...config, dnsSuffix: "moon.galaxy.universe"}, testParameters);
+        const searchURI = URI(uriString);
+        expect(
+            searchURI.valueOf()
+        ).toEqual("https://buzz.moon.galaxy.universe/indexes/foo/docs/suggest?api-version=2016-09-01");
+        expect(searchURI.hasQuery("api-version", "2016-09-01")).toBe(true);
+    });
     it("should create a suggestions post body from test config, and test suggestions parameters", () => {
         const postBody = uriHelper.buildPostBody(testParameters.suggestionsParameters, testParameters.input, uriHelper.suggestParameterValidator);
         expect(
